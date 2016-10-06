@@ -11,30 +11,27 @@ session = cluster.connect("nfl_plays")
 @app.route('/')
 @app.route('/index')
 def index():
-    SQL = "SELECT * FROM micro_winner"
+    return render_template("welcome.html")
+
+@app.route('/winner')
+def winner():
+    SQL = "SELECT * FROM micro_winner2"
     response = session.execute(SQL)
     user_id = response[0].user_id
     user_points = response[0].user_points
-    return render_template("base.html", user_id=user_id, user_points=user_points)
+    return render_template("winner.html", user_id=user_id, user_points=user_points)
 
+@app.route('/player')
+def winners():
+    return render_template("player.html")
 
-@app.route('/<user_id>')
-def get_email(user_id):
-       stmt = "SELECT * FROM micro_winners WHERE user_id=%s"
-       response = session.execute(stmt, parameters=[user_id])
-       response_list = []
-       for val in response:
-            response_list.append(val)
-       jsonresponse = [{"user_id": x.user_id, "user_points": x.user_points} for x in response_list]
-       return jsonify(emails=jsonresponse)
-
-
-@app.route('/_get_data')
-def get_data():
-    SQL = "SELECT * FROM micro_winner"
-    response = session.execute(SQL)
+@app.route('/player', methods=['POST'])
+def player_post():
+    player_id = request.form["player_id"]
+    SQL = "SELECT * FROM player_scores WHERE player_name=%s LIMIT 25"
+    response = session.execute(SQL, parameters=[player_id])
     response_list = []
     for val in response:
         response_list.append(val)
-    jsonresponse = [{"user_id": x.user_id, "user_points": x.user_points} for x in response_list]
-    return jsonify(winner=jsonresponse)
+    json_response = [{"player_name": x.player_name, "position": x.position, "player_points": x.player_points, "yards": x.yards,"touchdown": x.touchdown, "time": x.playtime} for x in response_list]
+    return render_template('playerop.html', output=json_response)

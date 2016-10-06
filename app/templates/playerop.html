@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block playerop %}
+<div class="container">
+     <div class="starter-template">
+       <div class="row" style="height:100vh;">
+               <div class="col-md-10 col-md-offset-1">
+                   <table class="table">
+                     <thead>
+                       <tr>
+                         <th>Name</th>
+                           <th>Position</th>
+                           <th>Yards</th>
+                           <th>Touchdown</th>
+                           <th>Player Points</th>
+                           <th>Time</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       {% for val in output %}
+                       <tr>
+                         <td>{{val.player_name}}</td>
+                           <td>{{val.position}}</td>
+                         <td>{{val.yards}}</td>
+                           <td>{{val.touchdown}}</td>
+                           <td>{{val.player_points}}</td>
+                         <td>{{val.time}}</td>
+                       </tr>
+                       {% endfor %}
+                     </tbody>
+                   </table>
+               </div>
+       </div>
+     </div>
+   </div>
+{% endblock %}
